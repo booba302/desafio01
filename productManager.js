@@ -1,54 +1,114 @@
+import fs from "fs";
+
 class ProductManager {
   constructor() {
     this.products = [];
+    this.path = "./products.json";
   }
 
-  addProduct = (title, description, price, thumbnail, code, stock) => {
-    if (
-      title == "" ||
-      description == "" ||
-      price == "" ||
-      thumbnail == "" ||
-      code == "" ||
-      stock == ""
-    ) {
+  async getProducts() {
+    try {
+      const data = await fs.promises.readFile(this.path, "utf-8");
+      const products = JSON.parse(data);
+      return products;
+    } catch (error) {
+      console.log("Error:" + error);
+    }
+  }
+
+  async addProduct(title, description, price, thumbnail, code, stock) {
+    if (!title || !description || !price || !thumbnail || !code || !stock) {
       console.log("Algunos de los datos no fue ingresado");
     } else {
-      const valCode = this.products.filter((product) => product.code == code);
+      const valCode = this.products.some((product) => product.code === code);
 
-      if (valCode.length !== 0) {
+      if (valCode) {
         console.log("Ya hay un producto con ese código");
       } else {
-        const product = {
-          id: this.products.length == 0 ? 1 : this.products.length + 1,
-          title,
-          description,
-          price,
-          thumbnail,
-          code,
-          stock,
-        };
-        this.products.push(product);
-        return console.log(product);
+        try {
+          const product = {
+            id: this.products.length == 0 ? 1 : this.products.length + 1,
+            title,
+            description,
+            price,
+            thumbnail,
+            code,
+            stock,
+          };
+          this.products.push(product);
+          await fs.promises.writeFile(
+            this.path,
+            JSON.stringify(this.products),
+            "utf-8"
+          );
+          return product;
+        } catch (error) {
+          console.log("error: " + error);
+        }
       }
     }
-  };
+  }
 
-  getProducts = () => {
-    return console.log(this.products);
-  };
+  async getProductById(id) {
+    try {
+      const products = await this.getProducts();
+      const findProduct = products.find((product) => product.id == id);
 
-  getProductById = (id) => {
-    const findProduct = this.products.filter((product) => product.id == id);
+      return findProduct.length == 0
+        ? "No se encuentra el producto con el ID proporcionado"
+        : findProduct;
+    } catch (error) {
+      console.log("Error: " + error);
+    }
+  }
 
-    return findProduct.length == 0
-      ? console.log("No se encuentra el producto con el ID proporcionado")
-      : console.log(findProduct);
-  };
+  async updateProduct(id, product) {
+    try {
+      const products = await this.getProducts();
+      const updProduct = await this.getProductById(id);
+      !product.title ? updProduct.title : (updProduct.title = product.title);
+      !product.description
+        ? updProduct.description
+        : (updProduct.description = product.description);
+      !product.price ? updProduct.price : (updProduct.price = product.price);
+      !product.thumbnail
+        ? updProduct.thumbnail
+        : (updProduct.thumbnail = product.thumbnail);
+      !product.code ? updProduct.code : (updProduct.code = product.code);
+      !product.stock ? updProduct.stock : (updProduct.stock = product.stock);
+      const newProducts = products.filter((product) => product.id != id);
+      newProducts.push(updProduct);
+      await fs.promises.writeFile(
+        this.path,
+        JSON.stringify(newProducts),
+        "utf-8"
+      );
+      return updProduct;
+    } catch (error) {
+      console.log("Error: " + error);
+    }
+  }
+
+  async deleteProduct(id) {
+    try {
+      const products = await this.getProducts();
+      const delProduct = await this.getProductById(id);
+      const newProduct = products.filter((product) => product.id != id);
+      await fs.promises.writeFile(
+        this.path,
+        JSON.stringify(newProduct),
+        "utf-8"
+      );
+      return delProduct;
+    } catch (error) {
+      console.log("Error: " + error);
+    }
+  }
 }
 
 const products = new ProductManager();
-products.addProduct(
+console.log("Agregando productos");
+await products.addProduct(
   "Zelda BOTW",
   "Breath Of The Wild",
   3000,
@@ -56,7 +116,7 @@ products.addProduct(
   "NIN-ZELDA-01",
   50
 );
-products.addProduct(
+await products.addProduct(
   "Zelda TOTK",
   "Tears Of The Kingdom",
   5000,
@@ -64,7 +124,7 @@ products.addProduct(
   "NIN-ZELDA-02",
   150
 );
-products.addProduct(
+await products.addProduct(
   "Dark Souls",
   "Remastered PC",
   2500,
@@ -72,15 +132,16 @@ products.addProduct(
   "PC-DSR-01",
   20
 );
-products.addProduct(
+await products.addProduct(
   "Diablo IV",
-  "Diablo 4 Deluxe Version",
-  6000,
-  "http://div-deluxe.jpg",
-  "PC-D4-01",
-  30
+  "PC MasterRace",
+  7500,
+  "http://div.jpg",
+  "PC-DIV-01",
+  20
 );
-products.addProduct(
+console.log("Agregando producto con código duplicado");
+await products.addProduct(
   "Zelda BOTW",
   "Breath Of The Wild",
   3000,
@@ -88,7 +149,16 @@ products.addProduct(
   "NIN-ZELDA-01",
   50
 );
-
-products.getProducts();
-products.getProductById(1);
-products.getProductById(5);
+console.log("Obteniendo productos");
+console.log(await products.getProducts());
+console.log("Obteniendo productos por ID");
+console.log(await products.getProductById(4));
+console.log("Actualizando productos");
+console.log(
+  await products.updateProduct(1, {
+    title: "Zelda Breath Of The Wild",
+    description: "Nintendo Games",
+  })
+);
+console.log("Borrando productos");
+console.log(await products.deleteProduct(4));
