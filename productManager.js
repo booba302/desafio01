@@ -12,39 +12,43 @@ class ProductManager {
       const products = JSON.parse(data);
       return products;
     } catch (error) {
-      console.log("Error:" + error);
+      await fs.promises.writeFile(
+        this.path,
+        JSON.stringify(this.products),
+        "utf-8"
+      );
+      const data = await fs.promises.readFile(this.path, "utf-8");
+      const products = JSON.parse(data);
+      return products;
     }
   }
 
   async addProduct(title, description, price, thumbnail, code, stock) {
+    const products = await this.getProducts();
     if (!title || !description || !price || !thumbnail || !code || !stock) {
       console.log("Algunos de los datos no fue ingresado");
     } else {
-      const valCode = this.products.some((product) => product.code === code);
-
-      if (valCode) {
-        console.log("Ya hay un producto con ese código");
-      } else {
-        try {
-          const product = {
-            id: this.products.length == 0 ? 1 : this.products.length + 1,
-            title,
-            description,
-            price,
-            thumbnail,
-            code,
-            stock,
-          };
-          this.products.push(product);
-          await fs.promises.writeFile(
-            this.path,
-            JSON.stringify(this.products),
-            "utf-8"
-          );
-          return product;
-        } catch (error) {
-          console.log("error: " + error);
-        }
+      const valCode = products.some((product) => product.code === code);
+      if (valCode) return console.log("Ya hay un producto con ese código");
+      try {
+        const product = {
+          id: products.length == 0 ? 1 : products.length + 1,
+          title,
+          description,
+          price,
+          thumbnail,
+          code,
+          stock,
+        };
+        products.push(product);
+        await fs.promises.writeFile(
+          this.path,
+          JSON.stringify(products),
+          "utf-8"
+        );
+        return product;
+      } catch (error) {
+        console.log("error: " + error);
       }
     }
   }
