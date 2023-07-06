@@ -1,0 +1,83 @@
+[
+  {
+    "id": 1,
+    "title": "Zelda TOTK",
+    "description": "Tears Of The Kingdom",
+    "price": 5000,
+    "thumbnail": "http://zeldatotk.jpg",
+    "code": "NIN-ZELDA-02",
+    "stock": 150
+  },
+  {
+    "id": 2,
+    "title": "Dark Souls",
+    "description": "Remastered PC",
+    "price": 2500,
+    "thumbnail": "http://dsr-pc.jpg",
+    "code": "PC-DSR-01",
+    "stock": 20
+  },
+  {
+    "id": 3,
+    "title": "Zelda Breath Of The Wild",
+    "description": "Nintendo Games",
+    "price": 3000,
+    "thumbnail": "http://zeldabotw.jpg",
+    "code": "NIN-ZELDA-01",
+    "stock": 50
+  },
+  {
+    "id": 4,
+    "title": "Zelda TOTK",
+    "description": "Tears Of The Kingdom",
+    "price": 5000,
+    "thumbnail": "http://zeldatotk.jpg",
+    "code": "NIN-ZELDA-02",
+    "stock": 150
+  },
+  {
+    "id": 5,
+    "title": "Dark Souls",
+    "description": "Remastered PC",
+    "price": 2500,
+    "thumbnail": "http://dsr-pc.jpg",
+    "code": "PC-DSR-01",
+    "stock": 20
+  },
+  {
+    "id": 6,
+    "title": "Zelda Breath Of The Wild",
+    "description": "Nintendo Games",
+    "price": 3000,
+    "thumbnail": "http://zeldabotw.jpg",
+    "code": "NIN-ZELDA-01",
+    "stock": 50
+  },
+  {
+    "id": 7,
+    "title": "Zelda TOTK",
+    "description": "Tears Of The Kingdom",
+    "price": 5000,
+    "thumbnail": "http://zeldatotk.jpg",
+    "code": "NIN-ZELDA-02",
+    "stock": 150
+  },
+  {
+    "id": 8,
+    "title": "Dark Souls",
+    "description": "Remastered PC",
+    "price": 2500,
+    "thumbnail": "http://dsr-pc.jpg",
+    "code": "PC-DSR-01",
+    "stock": 20
+  },
+  {
+    "id": 9,
+    "title": "Zelda Breath Of The Wild",
+    "description": "Nintendo Games",
+    "price": 3000,
+    "thumbnail": "http://zeldabotw.jpg",
+    "code": "NIN-ZELDA-01",
+    "stock": 50
+  }
+]

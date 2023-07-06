@@ -1,6 +1,6 @@
 import fs from "fs";
 
-class ProductManager {
+export default class ProductManager {
   constructor() {
     this.products = [];
     this.path = "./products.json";
@@ -110,59 +110,3 @@ class ProductManager {
   }
 }
 
-const products = new ProductManager();
-console.log("Agregando productos");
-await products.addProduct(
-  "Zelda BOTW",
-  "Breath Of The Wild",
-  3000,
-  "http://zeldabotw.jpg",
-  "NIN-ZELDA-01",
-  50
-);
-await products.addProduct(
-  "Zelda TOTK",
-  "Tears Of The Kingdom",
-  5000,
-  "http://zeldatotk.jpg",
-  "NIN-ZELDA-02",
-  150
-);
-await products.addProduct(
-  "Dark Souls",
-  "Remastered PC",
-  2500,
-  "http://dsr-pc.jpg",
-  "PC-DSR-01",
-  20
-);
-await products.addProduct(
-  "Diablo IV",
-  "PC MasterRace",
-  7500,
-  "http://div.jpg",
-  "PC-DIV-01",
-  20
-);
-console.log("Agregando producto con código duplicado");
-await products.addProduct(
-  "Zelda BOTW",
-  "Breath Of The Wild",
-  3000,
-  "http://zeldabotw.jpg",
-  "NIN-ZELDA-01",
-  50
-);
-console.log("Obteniendo productos");
-console.log(await products.getProducts());
-console.log("Obteniendo productos por ID");
-console.log(await products.getProductById(4));
-console.log("Actualizando productos");
-console.log(
-  await products.updateProduct(1, {
-    title: "Zelda Breath Of The Wild",
-    description: "Nintendo Games",
-  })
-);
-console.log("Borrando productos");
-console.log(await products.deleteProduct(4));
