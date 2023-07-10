@@ -54,15 +54,14 @@ export default class ProductManager {
   }
 
   async getProductById(id) {
-    try {
-      const products = await this.getProducts();
-      const findProduct = products.find((product) => product.id == id);
+    const products = await this.getProducts();
+    const findProduct = products.find((product) => product.id == id);
 
-      return findProduct.length == 0
-        ? "No se encuentra el producto con el ID proporcionado"
-        : findProduct;
-    } catch (error) {
-      console.log("Error: " + error);
+    if (findProduct) {
+      return findProduct;
+    } else {
+      console.log("No se encuentra el producto con el id proporcionado");
+      return error;
     }
   }
 
