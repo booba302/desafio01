@@ -24,10 +24,14 @@ app.get("/products/:id", async (req, res) => {
     const product = await productMng.getProductById(id);
     res.send(product);
   } catch (error) {
-    res.status(404).send({
-      error: true,
-      msg: "No se encuentra el producto con el id proporcionado",
-    });
+    if (error.message === "Not found") {
+      res.status(404).send({
+        error: true,
+        msg: "No se encuentra el producto con el id proporcionado",
+      });
+    } else {
+      res.status(500);
+    }
   }
 });
 
