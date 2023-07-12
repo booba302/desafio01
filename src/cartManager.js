@@ -1,5 +1,5 @@
 import fs from "fs";
-import __dirname from "./dirname.js";
+import __dirname from "./config/dirname.js";
 import ProductManager from "./productManager.js";
 const productMng = new ProductManager();
 
