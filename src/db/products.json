@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1,
+    "title": "Zelda TOTK",
+    "description": "Tears Of The Kingdom",
+    "price": 5000,
+    "thumbnail": "https://www.thecoverproject.net/uploads/pending/nintendo_switch.legendofzeldatearsofthekingdomthe_US.16888410521241815663_thumb.jpg",
+    "code": "NIN-ZELDA-02",
+    "stock": 150,
+    "status": true,
+    "category": "Nintendo Switch"
+  },
+  {
+    "id": 2,
+    "title": "Bloodborne",
+    "description": "GOTY",
+    "price": 2500,
+    "thumbnail": "https://coverproject.sfo2.cdn.digitaloceanspaces.com/playstation_4/playstation_4.bloodbornegameoftheyearedition_DE.1640670182475221381_thumb.jpg",
+    "code": "PS4-BLOOD-01",
+    "stock": 20,
+    "status": true,
+    "category": "Play Station IV"
+  },
+  {
+    "id": 3,
+    "title": "Zelda Breath Of The Wild",
+    "description": "Nintendo Games",
+    "price": 3000,
+    "thumbnail": "https://coverproject.sfo2.cdn.digitaloceanspaces.com/nintendo_switch/switch_zeldabreathofthewild_thumb.jpg",
+    "code": "NIN-ZELDA-01",
+    "stock": 50,
+    "status": true,
+    "category": "PC Windows"
+  },
+  {
+    "id": 4,
+    "title": "Just Dance 2023",
+    "description": "Ultimate edition",
+    "price": 5000,
+    "thumbnail": "https://www.thecoverproject.net/uploads/pending/nintendo_switch.justdance2023edition_US.16874956281803385115_thumb.jpg",
+    "code": "NIN-JD023-01",
+    "stock": 150,
+    "status": true,
+    "category": "Xbox Series X"
+  },
+  {
+    "id": 5,
+    "title": "Dark Souls III",
+    "description": "Fates of Fire",
+    "price": 2500,
+    "thumbnail": "https://coverproject.sfo2.cdn.digitaloceanspaces.com/playstation_4/ps4_darksoulsiii_thumb.jpg",
+    "code": "PS3-DS3FF-01",
+    "stock": 20,
+    "status": true,
+    "category": "Play Station III"
+  }
+]

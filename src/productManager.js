@@ -1,9 +1,10 @@
 import fs from "fs";
+import __dirname from "./dirname.js";
 
 export default class ProductManager {
   constructor() {
     this.products = [];
-    this.path = "./products.json";
+    this.path = `${__dirname}/db/products.json`;
   }
 
   async getProducts() {
@@ -23,32 +24,40 @@ export default class ProductManager {
     }
   }
 
-  async addProduct(title, description, price, thumbnail, code, stock) {
+  async addProduct(product) {
+    const { title, description, price, code, stock, category, thumbnail } =
+      product;
     const products = await this.getProducts();
-    if (!title || !description || !price || !thumbnail || !code || !stock) {
-      console.log("Algunos de los datos no fue ingresado");
+    if (!title || !description || !price || !code || !stock || !category) {
+      throw new Error("Missing data");
     } else {
       const valCode = products.some((product) => product.code === code);
-      if (valCode) return console.log("Ya hay un producto con ese código");
-      try {
-        const product = {
-          id: products.length == 0 ? 1 : products.length + 1,
-          title,
-          description,
-          price,
-          thumbnail,
-          code,
-          stock,
-        };
-        products.push(product);
-        await fs.promises.writeFile(
-          this.path,
-          JSON.stringify(products),
-          "utf-8"
-        );
-        return product;
-      } catch (error) {
-        console.log("error: " + error);
+      if (valCode) {
+        throw new Error("Already exist");
+      } else {
+        try {
+          const product = {
+            id: products.length == 0 ? 1 : products.length + 1,
+            title,
+            description,
+            price,
+            thumbnail,
+            code,
+            stock,
+            status: true,
+            category,
+          };
+          products.push(product);
+          await fs.promises.writeFile(
+            this.path,
+            JSON.stringify(products),
+            "utf-8"
+          );
+          return product;
+        } catch (error) {
+          console.log("error: " + error);
+          throw new Error("Couldn't be created");
+        }
       }
     }
   }
@@ -57,9 +66,9 @@ export default class ProductManager {
     const products = await this.getProducts();
     const findProduct = products.find((product) => product.id == id);
 
-    if(!findProduct) {
-      console.log("No se encuentra el producto")
-      throw new Error("Not found")      
+    if (!findProduct) {
+      console.log("No se encuentra el producto");
+      throw new Error("Product Not found");
     } else {
       return findProduct;
     }
@@ -79,6 +88,12 @@ export default class ProductManager {
         : (updProduct.thumbnail = product.thumbnail);
       !product.code ? updProduct.code : (updProduct.code = product.code);
       !product.stock ? updProduct.stock : (updProduct.stock = product.stock);
+      !product.category
+        ? updProduct.category
+        : (updProduct.category = product.category);
+      !product.status
+        ? updProduct.status
+        : (updProduct.status = product.status);
       const newProducts = products.filter((product) => product.id != id);
       newProducts.push(updProduct);
       await fs.promises.writeFile(
@@ -89,6 +104,7 @@ export default class ProductManager {
       return updProduct;
     } catch (error) {
       console.log("Error: " + error);
+      throw new Error("Not found");
     }
   }
 
@@ -105,6 +121,7 @@ export default class ProductManager {
       return delProduct;
     } catch (error) {
       console.log("Error: " + error);
+      throw new Error("Not found");
     }
   }
 }
