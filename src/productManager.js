@@ -1,10 +1,11 @@
 import fs from "fs";
 import __dirname from "./config/dirname.js";
+import { v4 as uuidv4 } from "uuid";
 
 export default class ProductManager {
   constructor() {
     this.products = [];
-    this.path = `${__dirname}/db/products.json`;
+    this.path = `${__dirname}/../db/products.json`;
   }
 
   async getProducts() {
@@ -13,6 +14,7 @@ export default class ProductManager {
       const products = JSON.parse(data);
       return products;
     } catch (error) {
+      console.log(error);
       await fs.promises.writeFile(
         this.path,
         JSON.stringify(this.products),
@@ -27,7 +29,9 @@ export default class ProductManager {
   async addProduct(product) {
     const { title, description, price, code, stock, category, thumbnail } =
       product;
+    const id = uuidv4();
     const products = await this.getProducts();
+    console.log(products);
     if (!title || !description || !price || !code || !stock || !category) {
       throw new Error("Missing data");
     } else {
@@ -37,7 +41,7 @@ export default class ProductManager {
       } else {
         try {
           const product = {
-            id: products.length == 0 ? 1 : products.length + 1,
+            id: id,
             title,
             description,
             price,
@@ -78,30 +82,32 @@ export default class ProductManager {
     try {
       const products = await this.getProducts();
       const updProduct = await this.getProductById(id);
-      !product.title ? updProduct.title : (updProduct.title = product.title);
-      !product.description
-        ? updProduct.description
-        : (updProduct.description = product.description);
-      !product.price ? updProduct.price : (updProduct.price = product.price);
-      !product.thumbnail
-        ? updProduct.thumbnail
-        : (updProduct.thumbnail = product.thumbnail);
-      !product.code ? updProduct.code : (updProduct.code = product.code);
-      !product.stock ? updProduct.stock : (updProduct.stock = product.stock);
-      !product.category
-        ? updProduct.category
-        : (updProduct.category = product.category);
-      !product.status
-        ? updProduct.status
-        : (updProduct.status = product.status);
-      const newProducts = products.filter((product) => product.id != id);
-      newProducts.push(updProduct);
-      await fs.promises.writeFile(
-        this.path,
-        JSON.stringify(newProducts),
-        "utf-8"
-      );
-      return updProduct;
+      if (updProduct) {
+        !product.title ? updProduct.title : (updProduct.title = product.title);
+        !product.description
+          ? updProduct.description
+          : (updProduct.description = product.description);
+        !product.price ? updProduct.price : (updProduct.price = product.price);
+        !product.thumbnail
+          ? updProduct.thumbnail
+          : (updProduct.thumbnail = product.thumbnail);
+        !product.code ? updProduct.code : (updProduct.code = product.code);
+        !product.stock ? updProduct.stock : (updProduct.stock = product.stock);
+        !product.category
+          ? updProduct.category
+          : (updProduct.category = product.category);
+        !product.status
+          ? updProduct.status
+          : (updProduct.status = product.status);
+        const newProducts = products.filter((product) => product.id != id);
+        newProducts.push(updProduct);
+        await fs.promises.writeFile(
+          this.path,
+          JSON.stringify(newProducts),
+          "utf-8"
+        );
+        return updProduct;
+      }
     } catch (error) {
       console.log("Error: " + error);
       throw new Error("Not found");
@@ -112,13 +118,15 @@ export default class ProductManager {
     try {
       const products = await this.getProducts();
       const delProduct = await this.getProductById(id);
-      const newProduct = products.filter((product) => product.id != id);
-      await fs.promises.writeFile(
-        this.path,
-        JSON.stringify(newProduct),
-        "utf-8"
-      );
-      return delProduct;
+      if (delProduct) {
+        const newProduct = products.filter((product) => product.id != id);
+        await fs.promises.writeFile(
+          this.path,
+          JSON.stringify(newProduct),
+          "utf-8"
+        );
+        return delProduct;
+      }
     } catch (error) {
       console.log("Error: " + error);
       throw new Error("Not found");

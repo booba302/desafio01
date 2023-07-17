@@ -44,7 +44,6 @@ cartRouter.post("/:idCart/product/:idProd", async (req, res) => {
       cart: addToCart,
     });
   } catch (error) {
-    console.log(error.message === "Not found");
     error.message === "Not found"
       ? res.status(404).send({ msg: "ID del producto y/o carrito inválido" })
       : res.status(500);

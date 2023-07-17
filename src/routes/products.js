@@ -37,10 +37,10 @@ productRouter.post("/", async (req, res) => {
     });
   } catch (error) {    
     error.message === "Missing data"
-      ? res.status(404).send({ msg: "Datos faltantes" })
+      ? res.status(400).send({ msg: "Datos faltantes" })
       : res.status(500);
     error.message === "Already exist"
-      ? res.status(404).send({ msg: "Ya existe un producto con ese código" })
+      ? res.status(400).send({ msg: "Ya existe un producto con ese código" })
       : res.status(500);
   }
 });

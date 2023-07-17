@@ -1,12 +1,14 @@
 import fs from "fs";
 import __dirname from "./config/dirname.js";
+import { v4 as uuidv4 } from "uuid";
+
 import ProductManager from "./productManager.js";
 const productMng = new ProductManager();
 
 export default class CartManager {
   constructor() {
     this.cart = [];
-    this.path = `${__dirname}/db/cart.json`;
+    this.path = `${__dirname}/../db/cart.json`;
   }
 
   async getCarts() {
@@ -28,10 +30,10 @@ export default class CartManager {
 
   async addCart() {
     const carts = await this.getCarts();
-    console.log(carts);
+    const id = uuidv4();
     try {
       const cart = {
-        id: carts.length == 0 ? 1 : carts.length + 1,
+        id: id,
         products: [],
       };
       carts.push(cart);
@@ -48,7 +50,7 @@ export default class CartManager {
     const findCart = carts.find((cart) => cart.id == id);
 
     if (!findCart) {
-      console.log("No se encuentra el producto");
+      console.log("No se encuentra el carrito");
       throw new Error("Cart Not found");
     } else {
       return findCart;
@@ -58,37 +60,19 @@ export default class CartManager {
   async addProductToCart(idCart, idProd) {
     try {
       const carts = await this.getCarts();
-      const findCart = await this.getCartById(idCart);
+      const findCart = carts.find((cart) => cart.id == idCart);
       const findPrdt = await productMng.getProductById(idProd);
 
-      const findProductInCart = findCart.products.find(
-        (prdt) => prdt.id == idProd
-      );
+      if (!findCart || !findPrdt) throw new Error("Not found");
 
-      if (!findProductInCart) {
-        const newCart = carts.filter((cart) => cart.id != idCart);
-        const newProduct = {
-          id: findPrdt.id,
-          quantity: 1,
-        };
-        findCart.products.push(newProduct);
-        newCart.push(findCart);
-        await fs.promises.writeFile(
-          this.path,
-          JSON.stringify(newCart),
-          "utf-8"
-        );
-        return findCart;
-      }
-      findCart.products.map((product) => {
-        if (product.id == idProd) {
-          product.quantity++;
-        }
-      });
-      const newCart = carts.filter((cart) => cart.id != idCart);
-      newCart.push(findCart);
-      await fs.promises.writeFile(this.path, JSON.stringify(newCart), "utf-8");
-      return findCart;
+      const findProductsInCart = findCart.products.find(
+        (prod) => (prod.id = idProd)
+      );
+      if (!findProductsInCart) {
+        findCart.products.push({ id: findPrdt.id, quantity: 1 });
+      } else findProductsInCart.quantity++;
+
+      await fs.promises.writeFile(this.path, JSON.stringify(carts), "utf-8");
     } catch (error) {
       throw new Error("Not found");
     }
