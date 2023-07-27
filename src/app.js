@@ -13,6 +13,14 @@ const app = express();
 const productMng = new ProductManager();
 const products = await productMng.getProducts();
 
+const httpServer = HTTPServer(app);
+const io = new SocketIO(httpServer);
+
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
+
 app.engine("handlebars", handlebars.engine());
 app.set("views", `${__dirname}/../views`);
 app.set("view engine", "handlebars");
@@ -20,22 +28,43 @@ app.set("view engine", "handlebars");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const httpServer = HTTPServer(app);
-const io = new SocketIO(httpServer);
+app.use(express.static(`${__dirname}/../public`));
 
 app.use("/products", productRouter);
 app.use("/carts", cartRouter);
 app.use("/", viewsRouter);
 
-app.use(express.static(`${__dirname}/../public`));
-app.use((req, res, next) => {
-  req.io = io;
-  next();
+app.get("/realtimeproducts", (req, res) => {
+  res.render("realTimeProducts");
+  req.io.emit("sendProdc");
 });
 
 io.on("connection", (socket) => {
   console.log(`socket conectado: ${socket.id}`);
   socket.emit("products", products);
+
+  socket.on("addProdc", async (product) => {
+    try {
+      await productMng.addProduct(product);
+      io.emit("sendProducts", products);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  socket.on("delProdc", async (id) => {
+    try {
+      await productMng.deleteProduct(id);
+      io.emit("sendProducts", products);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+});
+
+app.post("/realtimeproducts", (req, res) => {
+  res.render("realTimeProducts");
+  req.io.emit("sendProdc");
 });
 
 httpServer.listen(8080, () => {

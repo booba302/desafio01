@@ -1,17 +1,122 @@
 <div>
-  <h1>Lista de productos </h1>
-  <table>
+  <form class="row g-3" id="add-form">
+    <h1>Agregar producto </h1>
+    <div class="col-2">
+      <input
+        type="text"
+        class="form-control"
+        id="name"
+        placeholder="Nombre"
+        required
+      />
+    </div>
+    <div class="col-2">
+      <input
+        type="text"
+        class="form-control"
+        id="description"
+        placeholder="Descripción"
+        required
+      />
+    </div>
+    <div class="col-1">
+      <input
+        type="text"
+        class="form-control"
+        id="price"
+        placeholder="Precio"
+        required
+      />
+    </div>
+    <div class="col-3">
+      <input
+        type="text"
+        class="form-control"
+        id="thumbnail"
+        placeholder="Imagen"
+        required
+      />
+    </div>
+    <div class="col-1">
+      <input
+        type="text"
+        class="form-control"
+        id="code"
+        placeholder="Código"
+        required
+      />
+    </div>
+    <div class="col-1">
+      <input
+        type="text"
+        class="form-control"
+        id="stock"
+        placeholder="Stock"
+        required
+      />
+    </div>
+    <div class="col-1">
+      <input
+        type="text"
+        class="form-control"
+        id="category"
+        placeholder="Categoria"
+        required
+      />
+    </div>
+    <div class="col-1">
+      <button
+        type="submit"
+        id="button-add"
+        class="btn btn-primary mb-3"
+      >Agregar</button>
+    </div>
+  </form>
+</div>
+<div>
+  <h1>Eliminar productos </h1>
+  <form class="row g-3" id="del-form">
+    <div class="col-3">
+      <input
+        type="text"
+        class="form-control"
+        id="id"
+        placeholder="ID"
+        required
+      />
+    </div>
+    <div class="col-1">
+      <button
+        type="submit"
+        id="button-del"
+        class="btn btn-primary mb-3"
+      >Eliminar</button>
+    </div>
+  </form>
+</div>
+<div>
+  <h1>Lista de productos automática </h1>
+  <table class="table table-hover">
     <thead>
       <tr>
-        <td>Nombre</td>
-        <td>Descripción</td>
-        <td>Precio</td>
-        <td>Imagen</td>
-        <td>Stock</td>
-        <td>Categoría</td>
+        <td scope="col">ID</td>
+        <td scope="col">Nombre</td>
+        <td scope="col">Descripción</td>
+        <td scope="col">Precio</td>
+        <td scope="col">Imagen</td>
+        <td scope="col">Código</td>
+        <td scope="col">Stock</td>
+        <td scope="col">Categoría</td>
       </tr>
     </thead>
     <tbody id="tableProducts">
     </tbody>
   </table>
 </div>
+<script src="./socket.io/socket.io.js"></script>
+<script
+  src="https://code.jquery.com/jquery-3.7.0.min.js"
+  integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+  crossorigin="anonymous"
+></script>
+<script src="./js/productsTable.js"></script>

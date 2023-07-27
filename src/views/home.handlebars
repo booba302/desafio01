@@ -1,25 +1,29 @@
 <div>
   <h1>Lista de productos </h1>
-  <table>
+  <table class="table table-hover">
     <thead>
       <tr>
-        <td>Nombre</td>
-        <td>Descripción</td>
-        <td>Precio</td>
-        <td>Imagen</td>
-        <td>Stock</td>
-        <td>Categoría</td>
+        <td scope="col">ID</td>
+        <td scope="col">Nombre</td>
+        <td scope="col">Descripción</td>
+        <td scope="col">Precio</td>
+        <td scope="col">Imagen</td>
+        <td scope="col">Código</td>
+        <td scope="col">Stock</td>
+        <td scope="col">Categoría</td>
       </tr>
     </thead>
     <tbody>
       {{#each products}}
         <tr>
-          <td> {{this.title}} </td>
-          <td> {{this.description}} </td>
-          <td> {{this.price}} </td>
-          <td><img src={{this.thumbnail}} /></td>
-          <td> {{this.stock}} </td>
-          <td> {{this.category}} </td>
+          <td scope="col"> {{this.id}} </td>
+          <td scope="col"> {{this.title}} </td>
+          <td scope="col"> {{this.description}} </td>
+          <td scope="col"> {{this.price}} </td>
+          <td scope="col"><img src={{this.thumbnail}} /></td>
+          <td scope="col"> {{this.code}} </td>
+          <td scope="col"> {{this.stock}} </td>
+          <td scope="col"> {{this.category}} </td>
         </tr>
       {{/each}}
     </tbody>
