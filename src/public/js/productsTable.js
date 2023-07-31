@@ -13,7 +13,7 @@ function productList(product) {
 }
 
 const socket = io();
-socket.on("products", (products) => {
+socket.on("sendProdc", (products) => {
   const tdProducts = products.map((product) => productList(product));
   $("#tableProducts").html(tdProducts.join(" "));
 });

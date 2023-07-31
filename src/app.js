@@ -11,7 +11,6 @@ import viewsRouter from "./routes/views.js";
 
 const app = express();
 const productMng = new ProductManager();
-const products = await productMng.getProducts();
 
 const httpServer = HTTPServer(app);
 const io = new SocketIO(httpServer);
@@ -39,14 +38,15 @@ app.get("/realtimeproducts", (req, res) => {
   req.io.emit("sendProdc");
 });
 
-io.on("connection", (socket) => {
+io.on("connection", async (socket) => {
   console.log(`socket conectado: ${socket.id}`);
-  socket.emit("products", products);
+  const products = await productMng.getProducts();
+  socket.emit("sendProdc", products);
 
   socket.on("addProdc", async (product) => {
     try {
       await productMng.addProduct(product);
-      io.emit("sendProducts", products);
+      socket.emit("sendProducts", products);
     } catch (error) {
       console.log(error);
     }
@@ -55,7 +55,7 @@ io.on("connection", (socket) => {
   socket.on("delProdc", async (id) => {
     try {
       await productMng.deleteProduct(id);
-      io.emit("sendProducts", products);
+      socket.emit("sendProducts", products);
     } catch (error) {
       console.log(error);
     }
