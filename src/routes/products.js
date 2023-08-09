@@ -1,5 +1,5 @@
 import { Router } from "express";
-import ProductManager from "../productManager.js";
+import ProductManager from "../dao/fs/productManager.js";
 
 const productMng = new ProductManager();
 const productRouter = Router();
@@ -35,7 +35,7 @@ productRouter.post("/", async (req, res) => {
       msg: "El siguiente producto fue creado satisfactoriamente",
       product: newProduct,
     });
-  } catch (error) {    
+  } catch (error) {
     error.message === "Missing data"
       ? res.status(400).send({ msg: "Datos faltantes" })
       : res.status(500);

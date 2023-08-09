@@ -2,10 +2,11 @@ import express from "express";
 import { Server as HTTPServer } from "http";
 import { Server as SocketIO } from "socket.io";
 import handlebars from "express-handlebars";
+import mongoose from "mongoose";
 
 import productRouter from "./routes/products.js";
 import cartRouter from "./routes/carts.js";
-import ProductManager from "./productManager.js";
+import ProductManager from "./dao/fs/productManager.js";
 import __dirname from "./config/dirname.js";
 import viewsRouter from "./routes/views.js";
 
@@ -29,8 +30,8 @@ app.use(express.json());
 
 app.use(express.static(`${__dirname}/../public`));
 
-app.use("/products", productRouter);
-app.use("/carts", cartRouter);
+app.use("/api/products", productRouter);
+app.use("/api/carts", cartRouter);
 app.use("/", viewsRouter);
 
 app.get("/realtimeproducts", (req, res) => {
