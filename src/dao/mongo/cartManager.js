@@ -1,11 +1,7 @@
-import mongoose from "mongoose";
 import CartModel from "../models/cart.schema.js";
+import ProductModel from "../models/products.schema.js";
 
 export default class CartManager {
-  constructor() {
-    this.path = path;
-  }
-
   async getCarts() {
     try {
       const carts = await CartModel.find();
@@ -17,8 +13,8 @@ export default class CartManager {
 
   async addCart() {
     try {
-      await CartModel.create({ products: [] });
-      return { status: 200, response: "Cart created." };
+      const newCart = await CartModel.create({ products: [] });
+      return newCart;
     } catch (error) {
       console.log(error);
     }
@@ -26,7 +22,7 @@ export default class CartManager {
 
   async getCartById(id) {
     try {
-      const findCart = CartModel.findById(id);
+      const findCart = await CartModel.findById(id);
       if (!findCart) {
         console.log("No se encuentra el carrito");
         throw new Error("Cart Not found");
@@ -40,8 +36,8 @@ export default class CartManager {
 
   async addProductToCart(idCart, idProd) {
     try {
-      const findCart = CartModel.findById(idCart);
-      const findPrdt = CartModel.findById(idProd);
+      const findCart = await CartModel.findById(idCart);
+      const findPrdt = await ProductModel.findById(idProd);
       if (!findCart || !findPrdt) throw new Error("Not found");
 
       const findProductsInCart = findCart.products.find(

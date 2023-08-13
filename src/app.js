@@ -6,12 +6,18 @@ import mongoose from "mongoose";
 
 import productRouter from "./routes/products.js";
 import cartRouter from "./routes/carts.js";
-import ProductManager from "./dao/fs/productManager.js";
+import ProductManager from "./dao/mongo/productManager.js";
+import MessageManager from "./dao/mongo/messageManager.js";
 import __dirname from "./config/dirname.js";
 import viewsRouter from "./routes/views.js";
 
 const app = express();
 const productMng = new ProductManager();
+const messageMng = new MessageManager();
+
+const conn = await mongoose.connect(
+  "mongodb+srv://booba302:CEtg68FE9czaHCp@codercluster.ex9gekc.mongodb.net/ecommerce"
+);
 
 const httpServer = HTTPServer(app);
 const io = new SocketIO(httpServer);
@@ -47,7 +53,8 @@ io.on("connection", async (socket) => {
   socket.on("addProdc", async (product) => {
     try {
       await productMng.addProduct(product);
-      socket.emit("sendProducts", products);
+      const products = await productMng.getProducts();
+      socket.emit("sendProdc", products);
     } catch (error) {
       console.log(error);
     }
@@ -56,7 +63,8 @@ io.on("connection", async (socket) => {
   socket.on("delProdc", async (id) => {
     try {
       await productMng.deleteProduct(id);
-      socket.emit("sendProducts", products);
+      const products = await productMng.getProducts();
+      socket.emit("sendProdc", products);
     } catch (error) {
       console.log(error);
     }

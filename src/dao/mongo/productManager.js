@@ -8,14 +8,14 @@ export default class ProductManager {
 
   async getProducts() {
     try {
-      const products = await ProductModel.find();
+      const products = await ProductModel.find().lean();
       return products;
     } catch (error) {
       console.log(error);
     }
   }
 
-  async addProducts(product) {
+  async addProduct(product) {
     try {
       const producto = await ProductModel.insertMany([product]);
       return producto;

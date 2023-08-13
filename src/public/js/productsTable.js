@@ -1,7 +1,7 @@
 function productList(product) {
   return `
   <tr>
-  <td scope="col">${product.id}</td>
+  <td scope="col">${product._id}</td>
     <td scope="col">${product.title}</td>
     <td scope="col">${product.description}</td>
     <td scope="col">${product.price}</td>
