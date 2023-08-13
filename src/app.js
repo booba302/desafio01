@@ -43,19 +43,21 @@ io.on("connection", async (socket) => {
   const products = await productMng.getProducts();
   socket.emit("sendProdc", products);
 
-  socket.on("addProdc", async (product) => {
+  socket.on("addProdc", async (product) => {    
     try {
-      await productMng.addProduct(product);
-      socket.emit("sendProducts", products);
+      await productMng.addProduct(product); 
+      const products = await productMng.getProducts();     
+      socket.emit("sendProdc", products);
     } catch (error) {
       console.log(error);
     }
   });
 
-  socket.on("delProdc", async (id) => {
+  socket.on("delProdc", async (id) => {    
     try {
       await productMng.deleteProduct(id);
-      socket.emit("sendProducts", products);
+      const products = await productMng.getProducts();
+      socket.emit("sendProdc", products);
     } catch (error) {
       console.log(error);
     }
