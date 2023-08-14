@@ -50,6 +50,9 @@ io.on("connection", async (socket) => {
   const products = await productMng.getProducts();
   socket.emit("sendProdc", products);
 
+  const messages = await messageMng.getMessage();
+  socket.emit("allMessages", messages)
+
   socket.on("addProdc", async (product) => {
     try {
       await productMng.addProduct(product);
@@ -69,12 +72,24 @@ io.on("connection", async (socket) => {
       console.log(error);
     }
   });
+
+  socket.on("sendMsg", async (data) => {
+     let user = data.user
+     let message = data.message
+     await messageMng.addMessage(user, message)
+     const messages = await messageMng.getMessage();
+     socket.broadcast.emit("getMsg", messages)
+  })
 });
 
 app.post("/realtimeproducts", (req, res) => {
   res.render("realTimeProducts");
   req.io.emit("sendProdc");
 });
+
+app.get("/chat", (req,res)=>{
+  res.render("chat")
+})
 
 httpServer.listen(8080, () => {
   console.log("Escuchando puerto: 8080");

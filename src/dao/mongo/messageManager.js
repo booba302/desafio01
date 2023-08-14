@@ -19,7 +19,7 @@ export default class MessageManager {
 
   async getMessage() {
     try {
-      const messages = await this.messageModel.find();
+      const messages = await this.messageModel.find().lean();
       return messages;
     } catch (error) {
       throw new Error("No se puedo obtener el mensaje");
