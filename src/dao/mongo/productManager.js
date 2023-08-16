@@ -50,10 +50,21 @@ export default class ProductManager {
           ...productData,
           ...product,
         };
-        await ProductModel.updateOne({ _id: id }, newProduct);
-        return { status: 200, msg: "Producto actualizado." };
+        await ProductModel.updateOne(
+          {
+            _id: id,
+          },
+          newProduct
+        );
+        return {
+          status: 200,
+          msg: "Producto actualizado.",
+        };
       } else {
-        return { status: 404, msg: "Producto no encontrado." };
+        return {
+          status: 404,
+          msg: "Producto no encontrado.",
+        };
       }
     } catch (error) {
       console.log(error);

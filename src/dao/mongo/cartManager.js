@@ -54,4 +54,26 @@ export default class CartManager {
       console.log(error);
     }
   }
+
+  async delProductInCart(idCart, idProd) {
+    try {
+      let findCart = await CartModel.findById(idCart);
+      const prdtIndex = findCart.products.findIndex(
+        (prod) => prod.product == idProd
+      );
+      if (findCart.products[prdtIndex].quantity > 1) {
+        findCart.products[prdtIndex].quantity--;
+      } else {
+        findCart = await CartModel.findOneAndUpdate(
+          { _id: idCart },
+          { $pull: { products: { product: idProd } } },
+          { new: true }
+        );
+      }
+      await findCart.save();
+      return findCart;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }

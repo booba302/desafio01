@@ -50,4 +50,14 @@ cartRouter.post("/:idCart/product/:idProd", async (req, res) => {
   }
 });
 
+cartRouter.delete("/:idCart/product/:idProd", async (req, res) => {
+  const { idCart, idProd } = req.params;
+  try {
+    const deleteProd = await cartMng.delProductInCart(idCart, idProd);
+    res.send(deleteProd);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 export default cartRouter;
