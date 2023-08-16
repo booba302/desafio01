@@ -11,7 +11,6 @@ productRouter.get("/", async (req, res) => {
     let order, filter;
     !query ? (filter = {}) : (filter = { category: query });
     sort == "asc" ? (order = 1) : sort == "desc" ? (order = -1) : (order = 0);
-    console.log(sort);
     const products = await ProductModel.paginate(filter, {
       limit: limit,
       page: page,

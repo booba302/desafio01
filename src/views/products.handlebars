@@ -11,10 +11,11 @@
         <td scope="col">Código</td>
         <td scope="col">Stock</td>
         <td scope="col">Categoría</td>
+        <td scope="col">Acción</td>
       </tr>
     </thead>
     <tbody>
-      {{#each productsInCart}}
+      {{#each products.docs}}
         <tr>
           <td scope="col"> {{this._id}} </td>
           <td scope="col"> {{this.title}} </td>
@@ -24,8 +25,24 @@
           <td scope="col"> {{this.code}} </td>
           <td scope="col"> {{this.stock}} </td>
           <td scope="col"> {{this.category}} </td>
+          <td scope="col"> <button>Agregar al carrito</button> </td>
         </tr>
       {{/each}}
     </tbody>
   </table>
+</div>
+<div>
+  {{#if products.hasPrevPage}}
+    <a
+      class="btn btn-secondary"
+      href="/api/products?page={{products.prevPage}}&query={{query}}&limit={{products.limit}}&order={{order}}"
+    >Anterior</a>
+  {{/if}}
+  <span>Pagina {{products.page}} de {{products.totalPages}}</span>
+  {{#if products.hasNextPage}}
+    <a
+      class="btn btn-secondary"
+      href="/api/products?page={{products.nextPage}}&query={{query}}&limit={{products.limit}}&order={{order}}"
+    >Siguiente</a>
+  {{/if}}
 </div>

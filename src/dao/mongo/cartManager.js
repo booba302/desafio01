@@ -22,7 +22,9 @@ export default class CartManager {
 
   async getCartById(id) {
     try {
-      const findCart = await CartModel.findById(id);
+      const findCart = await CartModel.find({ _id: id })
+        .populate("products.product")
+        .lean();
       if (!findCart) {
         console.log("No se encuentra el carrito");
         throw new Error("Cart Not found");
@@ -70,6 +72,48 @@ export default class CartManager {
           { new: true }
         );
       }
+      await findCart.save();
+      return findCart;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async updateCart(idCart, product) {
+    try {
+      const updatedCart = await CartModel.findByIdAndUpdate(
+        { _id: idCart },
+        { products: product }
+      );
+      console.log("Carrito actualizado", updatedCart);
+      return updatedCart;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async updateQtyInCart(idCart, idProd, quantity) {
+    try {
+      const findCart = await CartModel.findById(idCart);
+      const prdtIndex = findCart.products.findIndex(
+        (prod) => prod.product == idProd
+      );
+      if (prdtIndex !== -1) {
+        findCart.products[prdtIndex].quantity = quantity;
+        await findCart.save();
+        return findCart;
+      } else {
+        throw new Error("Product not found");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async emptyCart(idCart) {
+    try {
+      const findCart = await CartModel.findById(idCart);
+      findCart.products = [];
       await findCart.save();
       return findCart;
     } catch (error) {

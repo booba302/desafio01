@@ -60,4 +60,35 @@ cartRouter.delete("/:idCart/product/:idProd", async (req, res) => {
   }
 });
 
+cartRouter.put("/:idCart", async (req, res) => {
+  try {
+    const { idCart } = req.params;
+    const { product } = req.body;
+    const updatedCart = await cartMng.updateCart(idCart, product);
+    res.send(updatedCart);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+cartRouter.put("/:idCart/product/:idProd", async (req, res) => {
+  try {
+    const { idCart, idProd } = req.params;
+    const { quantity } = req.body;
+    const updateQty = await cartMng.updateQtyInCart(idCart, idProd, quantity);
+    res.send(updateQty);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+cartRouter.delete("/:idCart", async (req, res) => {
+  try {
+    const { idCart } = req.params;
+    const cartEmpty = await cartMng.emptyCart(idCart);
+    res.send(cartEmpty);
+  } catch (error) {
+    console.log(error);
+  }
+});
 export default cartRouter;
