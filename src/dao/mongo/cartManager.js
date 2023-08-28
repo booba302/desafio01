@@ -43,7 +43,7 @@ export default class CartManager {
       if (!findCart || !findPrdt) throw new Error("Not found");
 
       const findProductsInCart = findCart.products.find(
-        (prod) => (prod.id = idProd)
+        (prod) => (prod.product == idProd)
       );
       if (!findProductsInCart) {
         findCart.products.push({ product: idProd, quantity: 1 });
