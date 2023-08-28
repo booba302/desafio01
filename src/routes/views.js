@@ -1,31 +1,21 @@
 import { Router } from "express";
 import ProductManager from "../dao/mongo/productManager.js";
 import CartManager from "../dao/mongo/cartManager.js";
-import ProductModel from "../dao/models/products.schema.js";
+import { isLogged, protectView } from "../utils/secure.middleware.js";
 
 const productMng = new ProductManager();
 const cartMng = new CartManager();
 
 const viewsRouter = Router();
 
-viewsRouter.get("/", async (req, res) => {
-  const products = await productMng.getProducts();
-  res.render("home", { products });
+viewsRouter.get("/login", isLogged, async (req, res) => {
+  res.render("login");
 });
 
-viewsRouter.get("/products", async (req, res) => {
-  const { limit = 10, page = 1, query, sort } = req.query;
-  let order, filter;
-  !query ? (filter = {}) : (filter = { category: query });
-  sort == "asc" ? (order = 1) : sort == "desc" ? (order = -1) : (order = 0);
-  const products = await ProductModel.paginate(filter, {
-    limit: limit,
-    page: page,
-    sort: { price: order },
-    lean: true,
-  });
-  console.log(products);
-  res.render("products", { products });
+viewsRouter.get("/products", protectView, async (req, res) => {
+  const { name, lastname, email } = req.session.user;
+  const products = await productMng.getProducts();
+  res.render("products", { products, name, lastname, email });
 });
 
 viewsRouter.get("/carts/:idCart", async (req, res) => {

@@ -1,4 +1,9 @@
 <div>
+  <div style="margin-bottom: 50px;">
+    <h1>Bienvenido</h1>
+    <h3>Nombre: {{name}} {{lastname}}</h3>
+    <h3>Correo: {{email}}</h3>
+  </div>
   <h1>Lista de productos </h1>
   <table class="table table-hover">
     <thead>
@@ -15,7 +20,7 @@
       </tr>
     </thead>
     <tbody>
-      {{#each products.docs}}
+      {{#each products}}
         <tr>
           <td scope="col"> {{this._id}} </td>
           <td scope="col"> {{this.title}} </td>
@@ -32,17 +37,11 @@
   </table>
 </div>
 <div>
-  {{#if products.hasPrevPage}}
-    <a
-      class="btn btn-secondary"
-      href="/api/products?page={{products.prevPage}}&query={{query}}&limit={{products.limit}}&order={{order}}"
-    >Anterior</a>
-  {{/if}}
-  <span>Pagina {{products.page}} de {{products.totalPages}}</span>
-  {{#if products.hasNextPage}}
-    <a
-      class="btn btn-secondary"
-      href="/api/products?page={{products.nextPage}}&query={{query}}&limit={{products.limit}}&order={{order}}"
-    >Siguiente</a>
-  {{/if}}
+  <form action="/logout" method="GET">
+    <input
+      class="btn btn-primary btn-block mb-4"
+      type="submit"
+      value="Cerrar Sesión"
+    />
+  </form>
 </div>

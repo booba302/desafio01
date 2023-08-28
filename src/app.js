@@ -3,9 +3,13 @@ import { Server as HTTPServer } from "http";
 import { Server as SocketIO } from "socket.io";
 import handlebars from "express-handlebars";
 import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
+import session from "express-session";
+import MongoStore from "connect-mongo";
 
 import productRouter from "./routes/products.js";
 import cartRouter from "./routes/carts.js";
+import userRouter from "./routes/users.js";
 import ProductManager from "./dao/mongo/productManager.js";
 import MessageManager from "./dao/mongo/messageManager.js";
 import __dirname from "./config/dirname.js";
@@ -33,11 +37,26 @@ app.set("view engine", "handlebars");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
+app.use(
+  session({
+    secret: "topsecret2023",
+    resave: true,
+    saveUninitialized: true,
+    store: new MongoStore({
+      mongoUrl:
+        "mongodb+srv://booba302:CEtg68FE9czaHCp@codercluster.ex9gekc.mongodb.net/ecommerce",
+      ttl: 3600,
+    }),
+    ttl: 3600,
+  })
+);
 
 app.use(express.static(`${__dirname}/../public`));
 
 app.use("/api/products", productRouter);
 app.use("/api/carts", cartRouter);
+app.use("/", userRouter);
 app.use("/", viewsRouter);
 
 app.get("/realtimeproducts", (req, res) => {
@@ -51,7 +70,7 @@ io.on("connection", async (socket) => {
   socket.emit("sendProdc", products);
 
   const messages = await messageMng.getMessage();
-  socket.emit("allMessages", messages)
+  socket.emit("allMessages", messages);
 
   socket.on("addProdc", async (product) => {
     try {
@@ -74,12 +93,12 @@ io.on("connection", async (socket) => {
   });
 
   socket.on("sendMsg", async (data) => {
-     let user = data.user
-     let message = data.message
-     await messageMng.addMessage(user, message)
-     const messages = await messageMng.getMessage();
-     socket.broadcast.emit("getMsg", messages)
-  })
+    let user = data.user;
+    let message = data.message;
+    await messageMng.addMessage(user, message);
+    const messages = await messageMng.getMessage();
+    socket.broadcast.emit("getMsg", messages);
+  });
 });
 
 app.post("/realtimeproducts", (req, res) => {
@@ -87,9 +106,9 @@ app.post("/realtimeproducts", (req, res) => {
   req.io.emit("sendProdc");
 });
 
-app.get("/chat", (req,res)=>{
-  res.render("chat")
-})
+app.get("/chat", (req, res) => {
+  res.render("chat");
+});
 
 httpServer.listen(8080, () => {
   console.log("Escuchando puerto: 8080");
