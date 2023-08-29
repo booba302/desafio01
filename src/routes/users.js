@@ -28,6 +28,10 @@ userRouter.get("/logout", protectView, async (req, res) => {
   });
 });
 
+userRouter.get("/register", isLogged, async (req, res) => {
+  res.render("register");
+});
+
 userRouter.post("/register", isLogged, async (req, res) => {
   const { name, lastname, email, password } = req.body;
 
@@ -39,7 +43,7 @@ userRouter.post("/register", isLogged, async (req, res) => {
     role: email == "adminCoder@coder.com" ? "admin" : "user",
   };
   const newUser = await userMng.createUser(user);
-  res.send(newUser);
+  res.redirect("/login")
 });
 
 export default userRouter;
