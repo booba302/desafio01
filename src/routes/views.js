@@ -13,9 +13,9 @@ viewsRouter.get("/login", isLogged, async (req, res) => {
 });
 
 viewsRouter.get("/products", protectView, async (req, res) => {
-  const { name, lastname, email } = req.session.user;
+  const { name, lastname, email, role } = req.session.user;
   const products = await productMng.getProducts();
-  res.render("products", { products, name, lastname, email });
+  res.render("products", { products, name, lastname, email, role });
 });
 
 viewsRouter.get("/carts/:idCart", async (req, res) => {
