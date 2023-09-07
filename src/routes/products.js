@@ -1,14 +1,23 @@
 import { Router } from "express";
-import ProductManager from "../productManager.js";
+import ProductManager from "../dao/mongo/productManager.js";
+import ProductModel from "../dao/models/products.schema.js";
 
 const productMng = new ProductManager();
 const productRouter = Router();
 
 productRouter.get("/", async (req, res) => {
   try {
-    const { limit } = req.query;
-    const products = await productMng.getProducts();
-    res.send(limit ? products.slice(0, limit) : products);
+    const { limit = 10, page = 1, query, sort } = req.query;
+    let order, filter;
+    !query ? (filter = {}) : (filter = { category: query });
+    sort == "asc" ? (order = 1) : sort == "desc" ? (order = -1) : (order = 0);
+    const products = await ProductModel.paginate(filter, {
+      limit: limit,
+      page: page,
+      sort: { price: order },
+      lean: true,
+    });
+    res.send(products);
   } catch (error) {
     res.status(404).send({ error: true });
   }
@@ -35,7 +44,7 @@ productRouter.post("/", async (req, res) => {
       msg: "El siguiente producto fue creado satisfactoriamente",
       product: newProduct,
     });
-  } catch (error) {    
+  } catch (error) {
     error.message === "Missing data"
       ? res.status(400).send({ msg: "Datos faltantes" })
       : res.status(500);

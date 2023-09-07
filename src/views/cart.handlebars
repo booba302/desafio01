@@ -1,0 +1,33 @@
+<div>
+  <h1>Lista de productos en el carrito ID {{idCart}} </h1>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <td scope="col">ID</td>
+        <td scope="col">Nombre</td>
+        <td scope="col">Descripción</td>
+        <td scope="col">Precio</td>
+        <td scope="col">Imagen</td>
+        <td scope="col">Código</td>
+        <td scope="col">Stock</td>
+        <td scope="col">Categoría</td>
+        <td scope="col">Cantidad</td>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each products}}
+        <tr>
+          <td scope="col"> {{this.product._id}} </td>
+          <td scope="col"> {{this.product.title}} </td>
+          <td scope="col"> {{this.product.description}} </td>
+          <td scope="col"> {{this.product.price}} </td>
+          <td scope="col"><img src={{this.product.thumbnail}} /></td>
+          <td scope="col"> {{this.product.code}} </td>
+          <td scope="col"> {{this.product.stock}} </td>
+          <td scope="col"> {{this.product.category}} </td>
+          <td scope="col"> {{this.quantity}} </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>

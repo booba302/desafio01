@@ -1,5 +1,5 @@
 import fs from "fs";
-import __dirname from "./config/dirname.js";
+import __dirname from "../../config/dirname.js";
 import { v4 as uuidv4 } from "uuid";
 
 import ProductManager from "./productManager.js";
