@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row justify-content-md-center">
     <div class="col-md-auto">
-      <form method="POST">
+      <form action="/api/users/login" method="POST">
         <!-- Email input -->
         <div class="form-outline mb-4">
           <input type="email" id="email" name="email" class="form-control" />
@@ -25,7 +25,14 @@
           value="Iniciar Sesión"
         />
       </form>
-      <a href="/register">Registrarse</a>
+      <a href="/api/auth/github">
+        <input
+          class="btn btn-primary btn-block mb-4"
+          type="submit"
+          value="Iniciar con Github"
+        />
+      </a>
+      <a href="/api/users/register">Registrarse</a>
     </div>
   </div>
 </div>

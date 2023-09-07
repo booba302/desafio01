@@ -13,7 +13,7 @@ viewsRouter.get("/login", isLogged, async (req, res) => {
 });
 
 viewsRouter.get("/products", protectView, async (req, res) => {
-  const { name, lastname, email, role } = req.session.user;
+  const { name, lastname, email, role } = req.user;
   const products = await productMng.getProducts();
   res.render("products", { products, name, lastname, email, role });
 });

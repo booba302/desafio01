@@ -1,26 +1,41 @@
 import { Router } from "express";
+import passport from "passport";
 import UserManager from "../dao/mongo/userManager.js";
 import { isLogged, protectView } from "../utils/secure.middleware.js";
 
 const userMng = new UserManager();
 const userRouter = Router();
 
-userRouter.get("/", isLogged, async (req, res) => {
-  res.redirect("/login");
+userRouter.get("/login", isLogged, async (req, res) => {
+  res.render("/login");
 });
 
-userRouter.post("/login", isLogged, async (req, res) => {
-  const { email, password } = req.body;
+userRouter.post(
+  "/login",
+  isLogged,
+  passport.authenticate("login"),
+  async (req, res) => {
+    req.session.user = {
+      name: req.user.name,
+      lastname: req.user.lastname,
+      email: req.user.email,
+      role: req.user.role,
+    };
+    res.redirect("/products");
+  }
+);
 
-  const user = await userMng.valUser(email, password);
-  if (!user) return res.redirect("/login");
-
-  delete user.password;
-  delete user.salt;
-
-  req.session.user = user;
-  res.redirect("/products");
+userRouter.get("/register", isLogged, async (req, res) => {
+  res.render("register");
 });
+
+userRouter.post(
+  "/register",
+  passport.authenticate("register"),
+  async (req, res) => {
+    res.redirect("/login");
+  }
+);
 
 userRouter.get("/logout", protectView, async (req, res) => {
   req.session.destroy((er) => {
@@ -28,22 +43,6 @@ userRouter.get("/logout", protectView, async (req, res) => {
   });
 });
 
-userRouter.get("/register", isLogged, async (req, res) => {
-  res.render("register");
-});
 
-userRouter.post("/register", isLogged, async (req, res) => {
-  const { name, lastname, email, password } = req.body;
-
-  const user = {
-    name,
-    lastname,
-    email,
-    password,
-    role: email == "adminCoder@coder.com" ? "admin" : "user",
-  };
-  const newUser = await userMng.createUser(user);
-  res.redirect("/login")
-});
 
 export default userRouter;

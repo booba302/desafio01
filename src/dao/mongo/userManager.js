@@ -1,5 +1,6 @@
 import UserModel from "../models/user.schema.js";
 import crypto from "crypto";
+import bcrypt from "bcrypt";
 
 export default class UserManager {
   constructor() {}
@@ -13,25 +14,36 @@ export default class UserManager {
     }
   }
 
+  async getUserById(id) {
+    try {
+      return await UserModel.findById(id);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getUserByEmail(email) {
+    try {
+      return await UserModel.findOne({ email });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async createUser(user) {
-    user.salt = crypto.randomBytes(128).toString("base64");
-    user.password = crypto
-      .createHmac("sha256", user.salt)
-      .update(user.password)
-      .digest("hex");
-    await UserModel.insertMany([user]);
-    return user;
+    const salt = await bcrypt.genSalt(10);
+    const hashedPwd = await bcrypt.hash(user.password, salt);
+    user.password = hashedPwd;
+    const newUser = await UserModel.insertMany(user);
+    return newUser;
   }
 
   async valUser(email, password) {
     const user = await UserModel.findOne({ email });
     if (!user) return false;
 
-    const loginHash = crypto
-      .createHmac("sha256", user.salt)
-      .update(password)
-      .digest("hex");
+    const validPassword = await bcrypt.compareSync(password, user.password);
 
-    return loginHash == user.password ? user.toObject() : false;
+    return validPassword ? user : false;
   }
 }
