@@ -1,10 +1,14 @@
 import passport from "passport";
 import local from "passport-local";
 import GithubStrategy from "passport-github2";
+import jwt from "passport-jwt";
 import UserManager from "../dao/mongo/userManager.js";
+import { SECRET } from "../utils/jwt.js";
+import cookieExtractor from "../utils/cookieJWT.js";
 
 const User = new UserManager();
 const LocalStrategy = local.Strategy;
+const JWTStrategy = jwt.Strategy;
 
 const InitPassport = () => {
   passport.use(
@@ -17,13 +21,14 @@ const InitPassport = () => {
 
           if (userExists) return done(null, false);
 
-          const { name, lastname } = req.body;
+          const { name, lastname, age } = req.body;
 
           const newUser = {
             name,
             lastname,
             email,
             password,
+            age,
             role: email == "adminCoder@coder.com" ? "admin" : "user",
           };
 
@@ -52,6 +57,19 @@ const InitPassport = () => {
   );
 
   passport.use(
+    "jwt",
+    new JWTStrategy(
+      {
+        jwtFromRequest: jwt.ExtractJwt.fromExtractors([cookieExtractor]),
+        secretOrKey: SECRET,
+      },
+      (payload, done) => {
+        
+      }
+    )
+  );
+
+  passport.use(
     "github",
     new GithubStrategy(
       {
@@ -68,6 +86,7 @@ const InitPassport = () => {
           lastname: profile._json.name.split(" ")[1],
           email: profile._json.email,
           password: "",
+          age: "",
           role:
             profile._json.email == "adminCoder@coder.com" ? "admin" : "user",
         };

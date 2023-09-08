@@ -1,5 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
+import { generateToken } from "../utils/jwt.js";
 
 const authManager = Router();
 
