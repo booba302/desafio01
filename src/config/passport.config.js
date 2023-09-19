@@ -3,8 +3,6 @@ import local from "passport-local";
 import GithubStrategy from "passport-github2";
 import jwt from "passport-jwt";
 import UserManager from "../dao/mongo/userManager.js";
-import { SECRET } from "../utils/jwt.js";
-import cookieExtractor from "../utils/cookieJWT.js";
 
 const User = new UserManager();
 const LocalStrategy = local.Strategy;
@@ -52,19 +50,6 @@ const InitPassport = () => {
           if (!user) return done("Usuario no existe" + error);
           return done(null, user);
         } catch (error) {}
-      }
-    )
-  );
-
-  passport.use(
-    "jwt",
-    new JWTStrategy(
-      {
-        jwtFromRequest: jwt.ExtractJwt.fromExtractors([cookieExtractor]),
-        secretOrKey: SECRET,
-      },
-      (payload, done) => {
-        
       }
     )
   );

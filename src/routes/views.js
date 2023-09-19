@@ -8,6 +8,10 @@ const cartMng = new CartManager();
 
 const viewsRouter = Router();
 
+viewsRouter.get("/", isLogged, async (req, res) => {
+  res.redirect("login");
+});
+
 viewsRouter.get("/login", isLogged, async (req, res) => {
   res.render("login");
 });
